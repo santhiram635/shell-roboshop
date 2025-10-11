@@ -27,14 +27,14 @@ VALIDATE(){ # functions receive inputs through args just like shell script args
     fi
 }
 
-cp mongo.repo /ect/yum.repos.d/mongo.repo
-VALIDATE $? "adding mongo repo"
+cp mongo.repo /etc/yum.repos.d/mongo.repo
+VALIDATE $? "Adding Mongo repo"
 
-dnf install mongodb-org -y &>>LOG_FILE
-VALIDATE $? "installing mongodb"
+dnf install mongodb-org -y &>>$LOG_FILE
+VALIDATE $? "Installing MongoDB"
 
-systemctl enable mongod &>>LOG_FILE
-VALIDATE $? "enable mongodb"
+systemctl enable mongod &>>$LOG_FILE
+VALIDATE $? "Enable MongoDB"
 
-systemcrl start mongod &>>LOG_FILE
-VALIDATE $? "start mongodb"
+systemctl start mongod 
+VALIDATE $? "Start MongoDB"
