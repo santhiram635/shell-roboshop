@@ -56,13 +56,19 @@ unzip /tmp/shipping.zip &>>$LOG_FILE
 VALIDATE $? "unzip shipping"
 
 mvn clean package  &>>$LOG_FILE
-mv target/shipping-1.0.jar shipping.jar 
+mv target/shipping-1.0.jar shipping.jar
+VALIDATE $? "clean mvn package"
+
 
 cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
-systemctl daemon-reload
-systemctl enable shipping  &>>$LOG_FILE
+VALIDATE $? "copy sipping service"
+
+systemctl daemon-reload &>>$LOG_FILE
+systemctl enable shipping &>>$LOG_FILE
+VALIDATE $? "daemon-reload"
 
 dnf install mysql -y  &>>$LOG_FILE
+VALIDATE $? "Install mysql client"
 
 mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
 if [ $? -ne 0 ]; then
@@ -73,4 +79,5 @@ else
     echo -e "Shipping data is already loaded ... $Y SKIPPING $N"
 fi
 
-systemctl restart shipping
+systemctl restart shipping &>>$LOG_FILE
+VALIDATE $? "restart shipping"
