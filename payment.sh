@@ -9,9 +9,9 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 SCRIPT_DIR=$PWD
-MONGODB_HOST=mongodb.mokshi.fun
+MONGODB_HOST=mongodb.daws86s.fun
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log" # /var/log/shell-script/16-logs.log
-MYSQL_HOST=mysql.mokshi.fun
+MYSQL_HOST=mysql.daws86s.fun
 
 mkdir -p $LOGS_FOLDER
 echo "Script started executed at: $(date)" | tee -a $LOG_FILE
@@ -30,8 +30,7 @@ VALIDATE(){ # functions receive inputs through args just like shell script args
     fi
 }
 
-dnf install python3 gcc python3-devel -y
-VALIDATE $? "Installing python3"
+dnf install python3 gcc python3-devel -y &>>$LOG_FILE
 
 id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then
@@ -56,15 +55,11 @@ VALIDATE $? "Removing existing code"
 unzip /tmp/payment.zip &>>$LOG_FILE
 VALIDATE $? "unzip payment"
 
-pip3 install -r requirements.txt
-VALIDATE $? "install dependencies"
+pip3 install -r requirements.txt &>>$LOG_FILE
 
 cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service
+systemctl daemon-reload
+systemctl enable payment  &>>$LOG_FILE
 
-systemctl daemon-reload &>>$LOG_FILE
-VALIDATE $? "daemon-reload"
-
-systemctl enable payment &>>$LOG_FILE
-systemctl start payment
-VALIDATE $? "srat payment"
+systemctl restart payment
 
