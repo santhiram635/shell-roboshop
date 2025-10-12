@@ -9,9 +9,9 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 SCRIPT_DIR=$PWD
-MONGODB_HOST=mongodb.mokshi.fun
+MONGODB_HOST=mongodb.daws86s.fun
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log" # /var/log/shell-script/16-logs.log
-MYSQL_HOST=mysql.mokshi.fun
+MYSQL_HOST=mysql.daws86s.fun
 
 mkdir -p $LOGS_FOLDER
 echo "Script started executed at: $(date)" | tee -a $LOG_FILE
@@ -55,17 +55,14 @@ VALIDATE $? "Removing existing code"
 unzip /tmp/shipping.zip &>>$LOG_FILE
 VALIDATE $? "unzip shipping"
 
-mvn clean package &>>$LOG_FILE
-mv target/shipping-1.0.jar shipping.jar
+mvn clean package  &>>$LOG_FILE
+mv target/shipping-1.0.jar shipping.jar 
 
 cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
+systemctl daemon-reload
+systemctl enable shipping  &>>$LOG_FILE
 
-systemctl daemon-reload &>>$LOG_FILE
-
-systemctl enable shipping &>>$LOG_FILE
-systemctl start shipping
-
-dnf install mysql -y &>>$LOG_FILE
+dnf install mysql -y  &>>$LOG_FILE
 
 mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
 if [ $? -ne 0 ]; then
