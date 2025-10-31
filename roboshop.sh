@@ -1,7 +1,7 @@
 #!/bin/bash
 
 AMI_ID="ami-09c813fb71547fc4f"
-SG_ID="sg-020cf2e239d3ab3ae" # replace with your SG ID
+SG_ID="sg-0d64a143e0c4e9ecb" # replace with your SG ID
 ZONE_ID="Z0276032366IKHANOML69" # replace with your ID
 DOMAIN_NAME="mokshi.fun"
 
